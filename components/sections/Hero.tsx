@@ -189,21 +189,24 @@ export const Hero = () => {
                             Respond<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue-primary to-brand-blue-accent">Ai</span>
                         </h1>
 
-                        {/* CTAs */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 md:mt-[60px]">
-                            <Button size="lg" onClick={() => (lenis ? lenis.scrollTo('#cta') : document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }))} rightIcon={<ArrowRight size={18} />}>
-                                Agendar Demo
-                            </Button>
-                            <Button size="lg" variant="outline" onClick={() => (lenis ? lenis.scrollTo('#services') : document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }))}>
-                                Ver Servicios
-                            </Button>
-                        </div>
+                        {/* CTAs and Subheading moved down 60px on desktop without affecting Heading position */}
+                        <div className="relative md:top-[60px] space-y-6">
+                            {/* CTAs */}
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                                <Button size="lg" onClick={() => (lenis ? lenis.scrollTo('#cta') : document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }))} rightIcon={<ArrowRight size={18} />}>
+                                    Agendar Demo
+                                </Button>
+                                <Button size="lg" variant="outline" onClick={() => (lenis ? lenis.scrollTo('#services') : document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }))}>
+                                    Ver Servicios
+                                </Button>
+                            </div>
 
-                        {/* Subheading */}
-                        <p className="text-lg md:text-xl text-brand-gray-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-                            Elimina tareas repetitivas y escala tu atención al cliente con Inteligencia Artificial. <br className="hidden md:block" />
-                            Sin errores. Sin pausas. Totalmente humano.
-                        </p>
+                            {/* Subheading */}
+                            <p className="text-lg md:text-xl text-brand-gray-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                                Elimina tareas repetitivas y escala tu atención al cliente con Inteligencia Artificial. <br className="hidden md:block" />
+                                Sin errores. Sin pausas. Totalmente humano.
+                            </p>
+                        </div>
                     </motion.div>
 
                     {/* Scroll Indicator */}
