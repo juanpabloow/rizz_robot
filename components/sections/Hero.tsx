@@ -189,8 +189,8 @@ export const Hero = () => {
                             Respond<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue-primary to-brand-blue-accent">Ai</span>
                         </h1>
 
-                        {/* CTAs and Subheading moved down 60px on desktop without affecting Heading position */}
-                        <div className="relative md:top-[60px] space-y-6">
+                        {/* CTAs and Subheading moved down 70px on desktop without affecting Heading position */}
+                        <div className="relative md:top-[70px] space-y-6">
                             {/* CTAs */}
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                                 <Button size="lg" onClick={() => (lenis ? lenis.scrollTo('#cta') : document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }))} rightIcon={<ArrowRight size={18} />}>
