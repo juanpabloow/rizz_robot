@@ -189,12 +189,6 @@ export const Hero = () => {
                             Respond<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue-primary to-brand-blue-accent">Ai</span>
                         </h1>
 
-                        {/* Subheading */}
-                        <p className="text-lg md:text-xl text-brand-gray-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-                            Elimina tareas repetitivas y escala tu atención al cliente con Inteligencia Artificial. <br className="hidden md:block" />
-                            Sin errores. Sin pausas. Totalmente humano.
-                        </p>
-
                         {/* CTAs */}
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                             <Button size="lg" onClick={() => (lenis ? lenis.scrollTo('#cta') : document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }))} rightIcon={<ArrowRight size={18} />}>
@@ -204,6 +198,12 @@ export const Hero = () => {
                                 Ver Servicios
                             </Button>
                         </div>
+
+                        {/* Subheading */}
+                        <p className="text-lg md:text-xl text-brand-gray-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                            Elimina tareas repetitivas y escala tu atención al cliente con Inteligencia Artificial. <br className="hidden md:block" />
+                            Sin errores. Sin pausas. Totalmente humano.
+                        </p>
                     </motion.div>
 
                     {/* Scroll Indicator */}
