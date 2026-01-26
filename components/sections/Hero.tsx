@@ -203,7 +203,7 @@ export const Hero = () => {
 
                             {/* Subheading */}
                             <p className="text-lg md:text-xl text-brand-gray-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-                                Elimina tareas repetitivas y escala tu atención al cliente con Inteligencia Artificial. <br className="hidden md:block" />
+                                Elimina tareas repetitivas y escala tu atención al cliente con IA. <br className="hidden md:block" />
                                 Sin errores. Sin pausas. Totalmente humano.
                             </p>
                         </div>
