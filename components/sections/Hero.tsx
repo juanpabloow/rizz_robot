@@ -171,42 +171,12 @@ export const Hero = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-6 max-w-4xl mx-auto"
+                        className="max-w-6xl mx-auto"
                     >
-                        {/* Badge */}
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-blue-primary/30 bg-brand-blue-primary/10 backdrop-blur-sm mb-6">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue-primary opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue-primary"></span>
-                            </span>
-                            <span className="text-xs font-medium text-brand-blue-primary tracking-wide uppercase">
-                                Disponible ahora v2.0
-                            </span>
-                        </div>
-
-                        {/* Heading */}
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white drop-shadow-2xl">
-                            Respond<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue-primary to-brand-blue-accent">Ai</span>
+                        {/* Headline */}
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-[1.1] md:leading-[1.05]">
+                            Implementa el siguiente <br className="hidden md:block" /> estándar en operaciones.
                         </h1>
-
-                        {/* CTAs and Subheading moved down 90px on desktop without affecting Heading position */}
-                        <div className="relative md:top-[90px] space-y-6">
-                            {/* CTAs */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                                <Button size="lg" onClick={() => (lenis ? lenis.scrollTo('#cta') : document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }))} rightIcon={<ArrowRight size={18} />}>
-                                    Agendar Demo
-                                </Button>
-                                <Button size="lg" variant="outline" onClick={() => (lenis ? lenis.scrollTo('#services') : document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }))}>
-                                    Ver Servicios
-                                </Button>
-                            </div>
-
-                            {/* Subheading */}
-                            <p className="text-lg md:text-xl text-brand-gray-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-                                Elimina tareas repetitivas y escala tu atención al cliente con IA. <br className="hidden md:block" />
-                                Sin errores. Sin pausas. Totalmente humano.
-                            </p>
-                        </div>
                     </motion.div>
 
                     {/* Scroll Indicator */}
