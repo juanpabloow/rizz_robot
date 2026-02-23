@@ -10,6 +10,7 @@ import { useSmoothScroll } from "@/components/SmoothScrollProvider";
 
 const navLinks = [
     { name: "Servicios", href: "#services" },
+    { name: "Metodología", href: "#methodology" },
     { name: "Beneficios", href: "#benefits" },
 ];
 
@@ -46,7 +47,7 @@ export const Navbar = () => {
                     <div className="flex items-center justify-between h-16 sm:h-20 relative">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-blue-primary to-brand-blue-accent flex items-center justify-center text-white font-bold text-lg group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-shadow">
+                            <div className="w-8 h-8 rounded-lg bg-linear-to-tr from-brand-blue-primary to-brand-blue-accent flex items-center justify-center text-white font-bold text-lg group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-shadow">
                                 M
                             </div>
                             <span className="font-bold text-lg tracking-tight text-white">

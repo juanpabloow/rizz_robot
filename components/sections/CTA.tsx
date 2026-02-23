@@ -40,8 +40,8 @@ export const CTA = () => {
         <SectionWrapper id="cta">
             <div className="relative rounded-3xl overflow-hidden p-8 md:p-16 text-center border border-brand-blue-primary/30">
                 {/* Background Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-gray-900 via-brand-black to-brand-black z-0" />
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-blue-primary to-transparent opacity-50" />
+                <div className="absolute inset-0 bg-linear-to-br from-brand-gray-900 via-brand-black to-brand-black z-0" />
+                <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-brand-blue-primary to-transparent opacity-50" />
                 <div className="absolute -top-[200px] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-brand-blue-primary/20 rounded-full blur-[100px] pointer-events-none" />
 
                 <div className="relative z-10 max-w-2xl mx-auto space-y-8">
@@ -61,7 +61,7 @@ export const CTA = () => {
                             </div>
                             <h3 className="text-xl font-medium text-white">¡Solicitud Enviada!</h3>
                             <p className="text-sm text-brand-gray-400">
-                                Nos pondremos en contacto contigo en los siguientes minutos.
+                                Nos pondremos en contacto contigo proximamente.
                             </p>
                             <Button variant="outline" onClick={() => setStatus("idle")} className="mt-4">
                                 Enviar otra solicitud
@@ -116,9 +116,6 @@ export const CTA = () => {
                             <Button type="submit" onClick={handleSubmit} className="w-full" size="lg" disabled={status === "loading"}>
                                 {status === "loading" ? "Enviando..." : "Solicitar Demo"}
                             </Button>
-                            <p className="text-center text-[10px] text-brand-gray-500">
-                                Respuesta garantizada en menos de 24h.
-                            </p>
                         </form>
                     )}
 

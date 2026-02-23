@@ -18,7 +18,16 @@ export const Hero = () => {
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+
     const lenis = useSmoothScroll();
+
+    const handleScrollTo = (id: string) => {
+        if (lenis) {
+            lenis.scrollTo(id, { duration: 1.2 });
+        } else {
+            document.getElementById(id.replace('#', ''))?.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
     // Scroll progress 0 -> 1 within the container
     const { scrollYProgress } = useScroll({
@@ -187,7 +196,7 @@ export const Hero = () => {
                 <div className="absolute inset-0 bg-brand-black/40 lg:bg-transparent lg:bg-linear-to-r lg:from-brand-black lg:via-brand-black/40 lg:to-transparent z-10" />
 
                 {/* 2. Local Scrim for Text Area (Enhances contrast behind copy) */}
-                <div className="absolute inset-0 bg-gradient-to-b from-brand-black/60 via-transparent to-brand-black/90 lg:bg-[radial-gradient(circle_at_15%_50%,rgba(7,8,11,0.9)_0%,rgba(7,8,11,0.4)_50%,transparent_100%)] z-10" />
+                <div className="absolute inset-0 bg-linear-to-b from-brand-black/60 via-transparent to-brand-black/90 lg:bg-[radial-gradient(circle_at_15%_50%,rgba(7,8,11,0.9)_0%,rgba(7,8,11,0.4)_50%,transparent_100%)] z-10" />
 
                 {/* 3. Scanline/Grid Effect (Subtle Texture) */}
                 <div className="absolute inset-0 bg-tech-grid opacity-20 z-10 pointer-events-none mix-blend-overlay" />
@@ -217,10 +226,10 @@ export const Hero = () => {
 
                         {/* CTAs */}
                         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                            <Button size="lg" className="w-full sm:w-auto min-w-[160px] shadow-lg shadow-brand-blue-primary/20">
+                            <Button size="lg" className="w-full sm:w-auto min-w-[160px] shadow-lg shadow-brand-blue-primary/20" onClick={() => handleScrollTo('#cta')}>
                                 Agendar Demo
                             </Button>
-                            <Button variant="outline" size="lg" className="w-full sm:w-auto min-w-[160px] border-brand-gray-700/50 hover:bg-brand-gray-800/30">
+                            <Button variant="outline" size="lg" className="w-full sm:w-auto min-w-[160px] border-brand-gray-700/50 hover:bg-brand-gray-800/30" onClick={() => handleScrollTo('#services')}>
                                 Ver Servicios
                             </Button>
                         </div>

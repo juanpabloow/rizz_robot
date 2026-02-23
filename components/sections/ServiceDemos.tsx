@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "lucide-react";
 
@@ -11,46 +11,87 @@ interface Message {
     id: number;
     text: string;
     sender: "client" | "agent" | "system";
+    intent?: string;
+    confidence?: string;
+    eligibility?: string;
+    refundMethod?: string;
 }
 
 type SequenceStep =
     | { type: "user_typing"; text: string; duration: number }
     | { type: "user_send"; duration: number }
     | { type: "client_msg"; id: number; text: string }
-    | { type: "thinking"; duration: number }
-    | { type: "agent_msg"; id: number; text: string }
+    | { type: "action_logs"; logs: string[]; duration: number }
+    | { type: "agent_msg"; id: number; text: string; intent?: string; confidence?: string; eligibility?: string; refundMethod?: string }
     | { type: "system_msg"; id: number; text: string };
 
 const CHAT_SEQUENCE: SequenceStep[] = [
-    // Step 1: User types "Hola, quiero..."
-    { type: "user_typing", text: "Hola, quiero saber si tienen disponibilidad esta semana.", duration: 2000 },
-    { type: "user_send", duration: 300 }, // click & send
-    { type: "client_msg", id: 1, text: "Hola, quiero saber si tienen disponibilidad esta semana." },
-
-    // Step 2: Agent thinks & responds
-    { type: "thinking", duration: 1500 },
-    { type: "agent_msg", id: 2, text: "Claro. Tengo disponibilidad este jueves a las 10:30am o viernes a las 9:00am. ¿Cuál te viene mejor?" },
-
-    // Step 3: User types "El jueves..."
-    { type: "user_typing", text: "El jueves está perfecto.", duration: 1500 },
+    // Step 1: User types "Mi pedido #78421 llegó defectuoso. Quiero devolverlo."
+    { type: "user_typing", text: "Mi pedido #78421 llegó defectuoso. Quiero devolverlo.", duration: 1800 },
     { type: "user_send", duration: 300 },
-    { type: "client_msg", id: 3, text: "El jueves está perfecto." },
+    { type: "client_msg", id: 1, text: "Mi pedido #78421 llegó defectuoso. Quiero devolverlo." },
 
-    // Step 4: Agent thinks & confirms
-    { type: "thinking", duration: 1000 },
-    { type: "agent_msg", id: 4, text: "Listo. He reservado tu cita para el jueves a las 10:30am. Te enviaré un recordatorio antes de la reunión." },
+    // Step 2: Agent reads intent & executes actions
+    {
+        type: "action_logs",
+        logs: [
+            "Detectando intención: Solicitud de devolución",
+            "Extrayendo número de orden"
+        ],
+        duration: 1000
+    },
+    {
+        type: "agent_msg",
+        id: 2,
+        text: "Lamento lo ocurrido. Para verificar el pedido, ¿puedes confirmarme el correo asociado a la compra?",
+        intent: "Devolución"
+    },
+
+    // Step 3: User confirms email
+    { type: "user_typing", text: "ramiro.arjermiro@email.com", duration: 800 },
+    { type: "user_send", duration: 200 },
+    { type: "client_msg", id: 3, text: "ramiro.arjermiro@email.com" },
+
+    // Step 4: Agent executes verification and refund
+    {
+        type: "action_logs",
+        logs: [
+            "Validando elegibilidad del pedido",
+            "Generando etiqueta y reembolso"
+        ],
+        duration: 1200
+    },
+    {
+        type: "agent_msg",
+        id: 4,
+        text: "Pedido confirmado. He generado tu etiqueta de retorno y el reembolso a tu tarjeta sera procesado cuando el producto sea devuelto.",
+        intent: "Devolución",
+        eligibility: "Aprobada",
+        refundMethod: "Tarjeta"
+    },
 
     // Step 5: System Confirmation
-    { type: "system_msg", id: 5, text: "Cita agendada" }
+    { type: "system_msg", id: 5, text: "Devolución procesada" }
 ];
 
 export const ChatDemo = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isThinking, setIsThinking] = useState(false);
     const [inputText, setInputText] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
+
+    // Action Logs State
+    const [isProcessingLogs, setIsProcessingLogs] = useState(false);
+    const [activeLogs, setActiveLogs] = useState<string[]>([]);
+
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+        }
+    }, [messages, activeLogs, isProcessingLogs]);
 
     // Intersection Observer to start animation only when in view
     useEffect(() => {
@@ -64,7 +105,8 @@ export const ChatDemo = () => {
                     setHasStarted(false);
                     setMessages([]);
                     setCurrentIndex(0);
-                    setIsThinking(false);
+                    setIsProcessingLogs(false);
+                    setActiveLogs([]);
                     setInputText("");
                     setIsSending(false);
                 }
@@ -116,26 +158,53 @@ export const ChatDemo = () => {
                     setMessages((prev) => [...prev, { id: step.id, text: step.text, sender: "client" }]);
                     timeout = setTimeout(() => {
                         setCurrentIndex((prev) => prev + 1);
-                    }, 500); // Small pause after msg appears
+                    }, 1200); // Increased pause to read client msg
 
-                } else if (step.type === "thinking") {
-                    setIsThinking(true);
-                    timeout = setTimeout(() => {
-                        setIsThinking(false);
-                        setCurrentIndex((prev) => prev + 1);
-                    }, step.duration);
+                } else if (step.type === "action_logs") {
+                    setIsProcessingLogs(true);
+                    let logIndex = 0;
+                    const logDelay = step.duration / step.logs.length;
+
+                    const cascadeLogs = () => {
+                        if (logIndex < step.logs.length) {
+                            const newLog = step.logs[logIndex];
+                            setActiveLogs(prev => {
+                                const next = [...prev, newLog];
+                                // Keep up to 6 logs visible as requested
+                                return next.length > 6 ? next.slice(next.length - 6) : next;
+                            });
+                            logIndex++;
+                            timeout = setTimeout(cascadeLogs, logDelay);
+                        } else {
+                            // Finish logs, slight pause to let user read the last log before hiding
+                            timeout = setTimeout(() => {
+                                setIsProcessingLogs(false);
+                                setActiveLogs([]);
+                                setCurrentIndex((prev) => prev + 1);
+                            }, 400);
+                        }
+                    };
+                    cascadeLogs();
 
                 } else if (step.type === "agent_msg") {
-                    setMessages((prev) => [...prev, { id: step.id, text: step.text, sender: "agent" }]);
+                    setMessages((prev) => [...prev, {
+                        id: step.id,
+                        text: step.text,
+                        sender: "agent",
+                        intent: step.intent,
+                        confidence: step.confidence,
+                        eligibility: step.eligibility,
+                        refundMethod: step.refundMethod
+                    }]);
                     timeout = setTimeout(() => {
                         setCurrentIndex((prev) => prev + 1);
-                    }, 1000); // Reading pause
+                    }, 3000); // Increased reading pause for agent response
 
                 } else if (step.type === "system_msg") {
                     setMessages((prev) => [...prev, { id: step.id, text: step.text, sender: "system" }]);
                     timeout = setTimeout(() => {
                         setCurrentIndex((prev) => prev + 1);
-                    }, 2000); // Pause before sequence ends
+                    }, 3500); // Wait longer on final system message
                 }
             } else {
                 // Sequence finished, wait 5s and restart if still visible
@@ -143,7 +212,8 @@ export const ChatDemo = () => {
                     if (hasStarted) {
                         setMessages([]);
                         setCurrentIndex(0);
-                        setIsThinking(false);
+                        setIsProcessingLogs(false);
+                        setActiveLogs([]);
                         setInputText("");
                         setIsSending(false);
                     }
@@ -158,7 +228,7 @@ export const ChatDemo = () => {
     return (
         <div id="chat-demo-container" className="w-full h-full flex flex-col bg-[#0B0D12] rounded-xl overflow-hidden shadow-2xl border border-white/5 font-sans">
             {/* Header / Agent Info */}
-            <div className="flex items-center gap-3 p-4 border-b border-white/5 bg-white/[0.02]">
+            <div className="flex items-center gap-3 p-4 border-b border-white/5 bg-white/2">
                 <div className="relative">
                     <div className="w-8 h-8 rounded-full bg-linear-to-br from-brand-blue-primary to-brand-blue-accent flex items-center justify-center shadow-lg shadow-brand-blue-primary/20">
                         <div className="w-4 h-4 bg-white/20 rounded-full blur-[1px]" />
@@ -172,7 +242,7 @@ export const ChatDemo = () => {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto no-scrollbar relative">
+            <div ref={scrollContainerRef} className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto no-scrollbar relative">
                 <AnimatePresence mode="popLayout">
                     {messages.map((msg) => (
                         <motion.div
@@ -181,48 +251,78 @@ export const ChatDemo = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ duration: 0.3, ease: "easeOut" }}
                             className={cn(
-                                "max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed relative",
-                                msg.sender === "client" && "self-end bg-brand-blue-primary text-white rounded-tr-none shadow-md shadow-brand-blue-primary/10",
-                                msg.sender === "agent" && "self-start bg-[#1C1F26] text-gray-100 rounded-tl-none border border-white/5",
-                                msg.sender === "system" && "self-center my-2 px-4 py-2 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full flex items-center gap-2 text-xs font-semibold tracking-wide shadow-[0_0_15px_rgba(34,197,94,0.1)]"
+                                "max-w-[85%] relative flex flex-col gap-1.5",
+                                msg.sender === "client" ? "self-end items-end" : "self-start items-start",
+                                msg.sender === "system" && "self-center items-center"
                             )}
                         >
-                            {msg.sender === "system" && <Calendar className="w-3.5 h-3.5" />}
-                            {msg.text}
+                            <div className={cn(
+                                "p-3.5 rounded-2xl text-sm leading-relaxed",
+                                msg.sender === "client" && "bg-brand-blue-primary text-white rounded-tr-none shadow-md shadow-brand-blue-primary/10",
+                                msg.sender === "agent" && "bg-[#1C1F26] text-gray-100 rounded-tl-none border border-white/5",
+                                msg.sender === "system" && "px-4 py-2 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full flex items-center gap-2 text-xs font-semibold tracking-wide shadow-[0_0_15px_rgba(34,197,94,0.1)]"
+                            )}>
+                                {msg.sender === "system" && <Calendar className="w-3.5 h-3.5" />}
+                                {msg.text}
+                            </div>
+
+                            {/* Visual Decision Engine */}
+                            {msg.sender === "agent" && msg.intent && (
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[9px] font-mono text-brand-gray-500/80 mt-1.5 opacity-80">
+                                    <div className="flex items-center gap-1.5">
+                                        <div className="w-1 h-1 rounded-full bg-brand-blue-primary/40" />
+                                        <span className="uppercase tracking-wider">Intención detectada:</span>
+                                        <span className="text-brand-gray-400">{msg.intent}</span>
+                                    </div>
+                                    {msg.eligibility && (
+                                        <div className="flex items-center gap-1.5 after:content-[''] after:w-px after:h-2 after:bg-brand-gray-800 after:ml-1.5 last:after:hidden">
+                                            <span className="uppercase tracking-wider">Elegibilidad:</span>
+                                            <span className="text-brand-blue-primary/70">{msg.eligibility}</span>
+                                        </div>
+                                    )}
+                                    {msg.refundMethod && (
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="uppercase tracking-wider">Método:</span>
+                                            <span className="text-brand-blue-primary/70">{msg.refundMethod}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </motion.div>
                     ))}
 
-                    {/* Liquid Purple Orb (Thinking State) */}
-                    {isThinking && (
+                    {/* Action Logs Panel (Micro-events inline like a bubble) */}
+                    {isProcessingLogs && (
                         <motion.div
-                            key="thinking-orb"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.3 } }}
-                            className="self-start flex items-center gap-3 mt-1"
+                            key="action-logs"
+                            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.3 } }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className="self-start max-w-[85%] bg-brand-gray-900/40 backdrop-blur-md text-gray-100 rounded-2xl rounded-tl-none border border-white/5 p-3.5 shadow-xl flex flex-col gap-1.5"
                         >
-                            <div className="relative w-8 h-8 flex items-center justify-center">
-                                {/* Core Orb */}
-                                <motion.div
-                                    animate={{
-                                        scale: [1, 1.1, 1],
-                                        opacity: [0.8, 1, 0.8]
-                                    }}
-                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                                    className="w-4 h-4 rounded-full bg-purple-600 blur-[2px] shadow-[0_0_15px_rgba(168,85,247,0.6)]"
-                                />
-                                {/* Liquid Outer Glow */}
-                                <motion.div
-                                    animate={{
-                                        scale: [1, 1.3, 1],
-                                        opacity: [0.3, 0.6, 0.3]
-                                    }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute inset-0 bg-purple-500/20 rounded-full blur-md"
-                                />
+                            <div className="text-[9px] font-bold text-brand-blue-primary uppercase tracking-widest flex items-center gap-1.5 mb-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-brand-blue-primary animate-ping" />
+                                Operaciones en curso
                             </div>
-                            {/* Optional subtle status text */}
-                            <span className="text-[10px] font-medium text-purple-400/60 tracking-wider uppercase animate-pulse">Procesando</span>
+                            <div className="flex flex-col gap-1.5 overflow-hidden">
+                                <AnimatePresence mode="popLayout">
+                                    {activeLogs.map((log, idx) => (
+                                        <motion.div
+                                            key={`${log}-${idx}`}
+                                            layout
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10, transition: { duration: 0.3 } }}
+                                            transition={{ duration: 0.4 }}
+                                            className="text-[11px] text-brand-gray-300 font-medium leading-tight flex items-start gap-1.5"
+                                        >
+                                            <span className="text-brand-blue-primary/60 mt-px">✓</span>
+                                            <span>{log}</span>
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
