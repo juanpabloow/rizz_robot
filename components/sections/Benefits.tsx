@@ -1,8 +1,10 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const pillars = [
     {
@@ -43,6 +45,7 @@ const pillars = [
 export const Benefits = () => {
     const sectionRef = useRef(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-10%" });
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -95,36 +98,59 @@ export const Benefits = () => {
                         <motion.div
                             key={idx}
                             variants={itemVariants}
-                            className="flex flex-col relative group"
+                            className="flex flex-col relative group cursor-pointer md:cursor-auto"
+                            onClick={() => {
+                                if (window.innerWidth < 768) {
+                                    setExpandedIndex(expandedIndex === idx ? null : idx);
+                                }
+                            }}
                         >
                             {/* Line connecting the layout (desktop focus) */}
                             <div className="hidden md:block absolute top-0 left-0 w-full h-px bg-brand-gray-800" />
                             <div className="hidden md:block absolute top-0 left-0 h-px w-0 bg-brand-blue-primary transition-all duration-700 ease-out group-hover:w-full" />
 
-                            {/* Top decorative number */}
-                            <div className="pt-6 md:pt-8 mb-6">
+                            {/* Top decorative number & Mobile Toggle */}
+                            <div className="pt-6 md:pt-8 mb-4 md:mb-6 flex justify-between items-center">
                                 <span className="text-sm font-mono tracking-widest text-brand-blue-primary/80">
                                     {pillar.number}
                                 </span>
+                                <span className="md:hidden text-brand-gray-500">
+                                    {expandedIndex === idx ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                </span>
                             </div>
 
-                            <h3 className="text-xl md:text-2xl font-medium text-white mb-4">
+                            <h3 className="text-xl md:text-2xl font-medium text-white mb-2 md:mb-4 pr-6 md:pr-0">
                                 {pillar.title}
                             </h3>
 
-                            <p className="text-base text-brand-gray-400 leading-relaxed mb-8">
-                                {pillar.description}
-                            </p>
+                            {/* Collapsible Content */}
+                            <AnimatePresence initial={false}>
+                                {(expandedIndex === idx || (typeof window !== 'undefined' && window.innerWidth >= 768) || true) && (
+                                    <motion.div
+                                        key="content"
+                                        initial={false}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        className={cn(
+                                            "md:block! overflow-hidden transition-all duration-300 md:opacity-100",
+                                            expandedIndex === idx ? "max-h-[500px] opacity-100 pt-2" : "max-h-0 opacity-0 md:max-h-[1000px]"
+                                        )}
+                                    >
+                                        <p className="text-base text-brand-gray-400 leading-relaxed mb-6 md:mb-8">
+                                            {pillar.description}
+                                        </p>
 
-                            {/* Points list */}
-                            <ul className="mt-auto space-y-3">
-                                {pillar.points.map((point, pIdx) => (
-                                    <li key={pIdx} className="flex items-start text-sm text-brand-gray-500">
-                                        <span className="mr-3 text-brand-blue-primary opacity-50 font-bold">·</span>
-                                        <span className="leading-snug">{point}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                                        {/* Points list */}
+                                        <ul className="mb-4 mt-auto space-y-3">
+                                            {pillar.points.map((point, pIdx) => (
+                                                <li key={pIdx} className="flex items-start text-sm text-brand-gray-500">
+                                                    <span className="mr-3 text-brand-blue-primary opacity-50 font-bold">·</span>
+                                                    <span className="leading-snug">{point}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
                     ))}
                 </motion.div>

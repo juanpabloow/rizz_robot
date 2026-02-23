@@ -176,7 +176,7 @@ export const Hero = () => {
     }, [isLoaded, images, currentIndex]);
 
     return (
-        <div ref={containerRef} className="relative h-[200vh] bg-brand-black">
+        <div ref={containerRef} className="relative h-[140vh] lg:h-[200vh] bg-brand-black">
             <div className="sticky top-0 h-screen w-full overflow-hidden">
 
                 {/* Loading State */}
