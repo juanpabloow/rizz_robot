@@ -41,7 +41,7 @@ export const Hero = () => {
     // Detect Mobile
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
+            setIsMobile(window.innerWidth < 1024);
         };
         // Initial check
         checkMobile();
@@ -212,7 +212,7 @@ export const Hero = () => {
                         <div className="space-y-6">
                             {/* Headline with Premium Glow Trail */}
                             <div className="relative inline-block">
-                                <div className="absolute -inset-8 bg-linear-to-r from-brand-blue-primary/40 via-purple-500/40 to-brand-blue-accent/40 opacity-40 blur-3xl rounded-full -z-10" />
+                                <div className="hidden md:block absolute -inset-8 bg-linear-to-r from-brand-blue-primary/40 via-purple-500/40 to-brand-blue-accent/40 opacity-40 blur-3xl rounded-full -z-10" />
                                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium lg:font-semibold tracking-tight text-white leading-[1.15] lg:leading-[1.1] relative z-20">
                                     Lleva tus operaciones al <br className="hidden lg:block" /> siguiente estándar
                                 </h1>

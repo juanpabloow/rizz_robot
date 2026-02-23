@@ -22,56 +22,56 @@ type SequenceStep =
     | { type: "user_send"; duration: number }
     | { type: "client_msg"; id: number; text: string }
     | { type: "action_logs"; logs: string[]; duration: number }
-    | { type: "agent_msg"; id: number; text: string; intent?: string; confidence?: string; eligibility?: string; refundMethod?: string }
-    | { type: "system_msg"; id: number; text: string };
+    | { type: "agent_msg"; id: number; text: string; intent?: string; confidence?: string; eligibility?: string; refundMethod?: string; readDuration?: number }
+    | { type: "system_msg"; id: number; text: string; readDuration?: number };
 
 const CHAT_SEQUENCE: SequenceStep[] = [
-    // Step 1: User types "Mi pedido #78421 llegó defectuoso. Quiero devolverlo."
-    { type: "user_typing", text: "Mi pedido #78421 llegó defectuoso. Quiero devolverlo.", duration: 1800 },
+    // Step 1: User types
+    { type: "user_typing", text: "Quiero devolver mi pedido", duration: 1400 },
     { type: "user_send", duration: 300 },
-    { type: "client_msg", id: 1, text: "Mi pedido #78421 llegó defectuoso. Quiero devolverlo." },
+    { type: "client_msg", id: 1, text: "Quiero devolver mi pedido" },
 
     // Step 2: Agent reads intent & executes actions
     {
         type: "action_logs",
         logs: [
-            "Detectando intención: Solicitud de devolución",
-            "Extrayendo número de orden"
+            "Analizando intención del cliente"
         ],
-        duration: 1000
+        duration: 800
     },
     {
         type: "agent_msg",
         id: 2,
-        text: "Lamento lo ocurrido. Para verificar el pedido, ¿puedes confirmarme el correo asociado a la compra?",
-        intent: "Devolución"
+        text: "Claro, ¿puedes darme el numero de tu pedido, por favor?",
+        intent: "Devolución",
+        readDuration: 1800
     },
 
-    // Step 3: User confirms email
-    { type: "user_typing", text: "ramiro.arjermiro@email.com", duration: 800 },
+    // Step 3: User confirms order
+    { type: "user_typing", text: "Es el TQM67", duration: 700 },
     { type: "user_send", duration: 200 },
-    { type: "client_msg", id: 3, text: "ramiro.arjermiro@email.com" },
+    { type: "client_msg", id: 3, text: "Es el TQM67" },
 
     // Step 4: Agent executes verification and refund
     {
         type: "action_logs",
         logs: [
-            "Validando elegibilidad del pedido",
-            "Generando etiqueta y reembolso"
+            "Validando pedido TQM67"
         ],
-        duration: 1200
+        duration: 800
     },
     {
         type: "agent_msg",
         id: 4,
-        text: "Pedido confirmado. He generado tu etiqueta de retorno y el reembolso a tu tarjeta sera procesado cuando el producto sea devuelto.",
-        intent: "Devolución",
+        text: "Gracias, he iniciado el proceso de reembolso.",
+        intent: "ID pedido",
         eligibility: "Aprobada",
-        refundMethod: "Tarjeta"
+        refundMethod: "Tarjeta",
+        readDuration: 2000
     },
 
     // Step 5: System Confirmation
-    { type: "system_msg", id: 5, text: "Devolución procesada" }
+    { type: "system_msg", id: 5, text: "Reembolso procesado", readDuration: 2500 }
 ];
 
 export const ChatDemo = () => {
@@ -198,13 +198,13 @@ export const ChatDemo = () => {
                     }]);
                     timeout = setTimeout(() => {
                         setCurrentIndex((prev) => prev + 1);
-                    }, 3000); // Increased reading pause for agent response
+                    }, step.readDuration || 3000);
 
                 } else if (step.type === "system_msg") {
                     setMessages((prev) => [...prev, { id: step.id, text: step.text, sender: "system" }]);
                     timeout = setTimeout(() => {
                         setCurrentIndex((prev) => prev + 1);
-                    }, 3500); // Wait longer on final system message
+                    }, step.readDuration || 3500);
                 }
             } else {
                 // Sequence finished, wait 5s and restart if still visible
@@ -271,7 +271,7 @@ export const ChatDemo = () => {
                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[9px] font-mono text-brand-gray-500/80 mt-1.5 opacity-80">
                                     <div className="flex items-center gap-1.5">
                                         <div className="w-1 h-1 rounded-full bg-brand-blue-primary/40" />
-                                        <span className="uppercase tracking-wider">Intención detectada:</span>
+                                        <span className="uppercase tracking-wider">Intención:</span>
                                         <span className="text-brand-gray-400">{msg.intent}</span>
                                     </div>
                                     {msg.eligibility && (

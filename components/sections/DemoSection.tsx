@@ -25,7 +25,7 @@ export const DemoSection = () => {
                     {/* Glow Effect */}
                     <div className="absolute -inset-1 bg-linear-to-r from-brand-blue-primary via-purple-500 to-brand-blue-accent opacity-20 blur-2xl rounded-[32px] -z-10" />
 
-                    <div className="relative aspect-4/3 md:aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0B0D12]">
+                    <div className="relative h-[550px] md:h-auto md:aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0B0D12]">
                         <ChatDemo />
                     </div>
                 </div>
