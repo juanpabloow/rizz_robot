@@ -9,7 +9,6 @@ import { Menu, X } from "lucide-react";
 import { useSmoothScroll } from "@/components/SmoothScrollProvider";
 
 const navLinks = [
-    { name: "Solución", href: "#solution" },
     { name: "Servicios", href: "#services" },
     { name: "Beneficios", href: "#benefits" },
 ];
@@ -44,19 +43,19 @@ export const Navbar = () => {
                 )}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16 sm:h-20">
+                    <div className="flex items-center justify-between h-16 sm:h-20 relative">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2 group">
                             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-blue-primary to-brand-blue-accent flex items-center justify-center text-white font-bold text-lg group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-shadow">
-                                R
+                                M
                             </div>
                             <span className="font-bold text-lg tracking-tight text-white">
-                                Respond<span className="text-brand-blue-primary">Ai</span>
+                                Montserrat<span className="text-brand-blue-primary">AI</span>
                             </span>
                         </Link>
 
-                        {/* Desktop Nav */}
-                        <div className="hidden md:flex items-center gap-8">
+                        {/* Desktop Nav - Center Links */}
+                        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}
@@ -66,6 +65,10 @@ export const Navbar = () => {
                                     {link.name}
                                 </Link>
                             ))}
+                        </div>
+
+                        {/* Desktop Nav - Right CTA */}
+                        <div className="hidden md:flex items-center">
                             <Button size="sm" onClick={handleScrollToCTA}>
                                 Agendar Demo
                             </Button>

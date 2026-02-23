@@ -1,33 +1,87 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-black: #07080B;
-  --color-brand-gray-900: #0F1115;
-  --color-brand-gray-800: #151823;
-  --color-brand-gray-700: #23263A;
-  --color-brand-gray-400: #A7ABB7;
-  --color-brand-blue-primary: #3B82F6;
-  --color-brand-blue-accent: #00A3FF;
-  
-  --font-sans: var(--font-inter);
-  
+  --color-brand-primary: var(--color-brand-primary);
+  --color-brand-accent: var(--color-brand-accent);
+  --color-brand-link: var(--color-brand-link);
+  --color-brand-black: var(--color-brand-black);
+
+  --color-brand-gray-900: var(--color-brand-gray-900);
+  --color-brand-gray-800: var(--color-brand-gray-800);
+  --color-brand-gray-700: var(--color-brand-gray-700);
+  --color-brand-gray-400: var(--color-brand-gray-400);
+
+  --color-brand-blue-primary: var(--color-brand-primary);
+  --color-brand-blue-accent: var(--color-brand-accent);
+
+  --radius-button: var(--radius-button);
+  --radius-base: var(--radius-base);
+
+  --font-mono: var(--font-mono);
+
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-shimmer: shimmer 2s linear infinite;
+  --animate-marquee: marquee 40s linear infinite;
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
   }
+
   @keyframes shimmer {
-    from { background-position: 0 0; }
-    to { background-position: -200% 0; }
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
   }
 }
 
 :root {
-  --background: #07080B;
+  /* Branding Colors */
+  --color-brand-primary: #0080FF;
+  --color-brand-accent: #0080FF;
+  --color-brand-link: #0080FF;
+  --color-brand-black: #0A0A0A;
+
+  /* Legacy/Compat Colors */
+  --color-brand-gray-900: #0F1115;
+  --color-brand-gray-800: #151823;
+  --color-brand-gray-700: #23263A;
+  --color-brand-gray-400: #A7ABB7;
+  --color-brand-blue-primary: #0080FF;
+  --color-brand-blue-accent: #0080FF;
+
+  /* Spacing / Radius */
+  --radius-base: 6px;
+  --radius-button: 6px;
+
+  /* Theme */
+  --background: #0A0A0A;
   --foreground: #FFFFFF;
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
 }
 
 body {
@@ -41,7 +95,7 @@ body {
 /* Custom Utilities */
 .bg-tech-grid {
   background-size: 50px 50px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   mask-image: radial-gradient(circle at center, black, transparent 80%);

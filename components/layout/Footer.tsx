@@ -7,10 +7,10 @@ export const Footer = () => {
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded bg-gradient-to-tr from-brand-blue-primary to-brand-blue-accent flex items-center justify-center text-white font-bold text-xs">
-                            R
+                            M
                         </div>
                         <span className="font-bold text-sm tracking-tight text-white">
-                            Respond<span className="text-brand-blue-primary">Ai</span>
+                            Montserrat<span className="text-brand-blue-primary">AI</span>
                         </span>
                     </div>
 
@@ -20,8 +20,9 @@ export const Footer = () => {
                         <Link href="#cta" className="hover:text-white transition-colors">Contacto</Link>
                     </div>
 
-                    <div className="text-xs text-brand-gray-400">
-                        &copy; {new Date().getFullYear()} RespondAi. Todos los derechos reservados.
+                    <div className="flex flex-col items-center md:items-end gap-1 text-xs text-brand-gray-400 text-center md:text-right">
+                        <p>&copy; 2026 MONTSERRATAI. NIT. 1.011.083.308-1.</p>
+                        <p>Calle 39 Sur 72 Q 22, Bogotá D.C., Colombia | jcardozor06@gmail.com | +57 3043906303</p>
                     </div>
                 </div>
             </div>

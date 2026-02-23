@@ -1,10 +1,11 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { ProblemSolution } from "@/components/sections/ProblemSolution";
 import { Services } from "@/components/sections/Services";
+import { DemoSection } from "@/components/sections/DemoSection";
 import { Benefits } from "@/components/sections/Benefits";
 import { CTA } from "@/components/sections/CTA";
+import { Methodology } from "@/components/sections/Methodology";
 
 export default function Home() {
   return (
@@ -12,8 +13,9 @@ export default function Home() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
-        <ProblemSolution />
         <Services />
+        <DemoSection />
+        <Methodology />
         <Benefits />
         <CTA />
       </main>

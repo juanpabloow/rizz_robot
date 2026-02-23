@@ -7,14 +7,17 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { useSmoothScroll } from "@/components/SmoothScrollProvider";
 
 const FRAME_COUNT = 40;
-const IMAGES_DIR = "/hero-sequence";
-const IMAGE_NAME_PREFIX = "frame_";
+const DESKTOP_IMAGES_DIR = "/hero-sequence";
+const DESKTOP_IMAGE_PREFIX = "frame_";
+const MOBILE_IMAGES_DIR = "/hero-mobile";
+const MOBILE_IMAGE_PREFIX = "mobile_frame_";
 
 export const Hero = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const lenis = useSmoothScroll();
 
     // Scroll progress 0 -> 1 within the container
@@ -26,16 +29,33 @@ export const Hero = () => {
     // Map 0-1 to 0-(FRAME_COUNT-1)
     const currentIndex = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
-    // Preload images
+    // Detect Mobile
     useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        // Initial check
+        checkMobile();
+
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Preload images based on device
+    useEffect(() => {
+        setIsLoaded(false); // Reset loaded state when switching source
+
         const loadImages = async () => {
             const loadedImages: HTMLImageElement[] = [];
             const promises = [];
 
+            const dir = isMobile ? MOBILE_IMAGES_DIR : DESKTOP_IMAGES_DIR;
+            const prefix = isMobile ? MOBILE_IMAGE_PREFIX : DESKTOP_IMAGE_PREFIX;
+
             for (let i = 0; i < FRAME_COUNT; i++) {
                 const promise = new Promise((resolve) => {
                     const img = new Image();
-                    img.src = `${IMAGES_DIR}/${IMAGE_NAME_PREFIX}${i.toString().padStart(3, "0")}.jpg`;
+                    img.src = `${dir}/${prefix}${i.toString().padStart(3, "0")}.jpg`;
                     img.onload = () => resolve(img);
                     img.onerror = () => resolve(null); // Resolve to avoid breaking Promise.all
                     loadedImages[i] = img; // maintain order
@@ -50,7 +70,7 @@ export const Hero = () => {
         };
 
         loadImages();
-    }, []);
+    }, [isMobile]);
 
     // Draw to canvas
     useEffect(() => {
@@ -102,7 +122,7 @@ export const Hero = () => {
         return () => unsubscribe();
     }, [currentIndex, isLoaded, images]);
 
-    // Handle Resize
+    // Handle Resize (Canvas Size)
     useEffect(() => {
         const handleResize = () => {
             if (canvasRef.current) {
@@ -147,7 +167,7 @@ export const Hero = () => {
     }, [isLoaded, images, currentIndex]);
 
     return (
-        <div ref={containerRef} className="relative h-[300vh] bg-brand-black">
+        <div ref={containerRef} className="relative h-[200vh] bg-brand-black">
             <div className="sticky top-0 h-screen w-full overflow-hidden">
 
                 {/* Loading State */}
@@ -181,10 +201,13 @@ export const Hero = () => {
                         className="max-w-xl w-full flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 lg:space-y-10"
                     >
                         <div className="space-y-6">
-                            {/* Headline */}
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium lg:font-semibold tracking-tight text-white leading-[1.15] lg:leading-[1.1]">
-                                Lleva tus operaciones al <br className="hidden lg:block" /> siguiente estándar
-                            </h1>
+                            {/* Headline with Premium Glow Trail */}
+                            <div className="relative inline-block">
+                                <div className="absolute -inset-8 bg-linear-to-r from-brand-blue-primary/40 via-purple-500/40 to-brand-blue-accent/40 opacity-40 blur-3xl rounded-full -z-10" />
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium lg:font-semibold tracking-tight text-white leading-[1.15] lg:leading-[1.1] relative z-20">
+                                    Lleva tus operaciones al <br className="hidden lg:block" /> siguiente estándar
+                                </h1>
+                            </div>
 
                             {/* Subheadline */}
                             <p className="text-lg sm:text-lg lg:text-xl text-brand-gray-400 font-normal leading-relaxed max-w-lg mx-auto lg:mx-0">

@@ -2,35 +2,30 @@
 
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { MessageSquare, Phone, UserCog, ChevronDown } from "lucide-react";
+import { WorkflowPreview } from "./WorkflowPreview";
+import { IntegrationsPreview } from "./IntegrationsPreview";
+import { KPIDashboard } from "./KPIDashboard";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ChatDemo, CallsDemo, HandoffDemo } from "./ServiceDemos";
-
 const services = [
     {
-        id: "atencion-ia",
-        title: "Atención al Cliente IA",
-        description: "Respuestas instantáneas y precisas en WhatsApp, chat web y email.",
-        icon: <MessageSquare size={20} />,
-        features: ["Entrenamiento con tus datos", "Tono de marca personalizado", "Escalado infinito"],
-        Demo: ChatDemo,
+        id: "workflows",
+        number: "01",
+        title: "Workflows totalmente personalizados",
+        description: "Diseña agentes de IA con instrucciones claras y acceso a las herramientas y sistemas necesarios para ejecutar tareas específicas con precisión y autonomía.",
     },
     {
-        id: "llamadas-ia",
-        title: "Llamadas Inteligentes",
-        description: "Agentes de voz que agendan citas, califican leads y resuelven objeciones.",
-        icon: <Phone size={20} />,
-        features: ["Voz natural y controlada", "Manejo de objeciones", "Integración con Calendario/CRM"],
-        Demo: CallsDemo,
+        id: "integracion",
+        number: "02",
+        title: "Integración con cualquier sistema",
+        description: "Conecta los agentes de IA a cualquier herramienta mediante APIs, webhooks o automatizaciones avanzadas, asegurando interoperabilidad total con tu ecosistema tecnológico.",
     },
     {
-        id: "handoff-humano",
-        title: "Handoff a Humanos",
-        description: "Transferencia inteligente cuando la IA detecta complejidad o riesgo.",
-        icon: <UserCog size={20} />,
-        features: ["Contexto completo y trazabilidad", "Detección de sentimiento", "Alertas en tiempo real"],
-        Demo: HandoffDemo,
+        id: "data",
+        number: "03",
+        title: "Extracción y análisis de datos",
+        description: "Cada interacción genera datos accionables. Extrae, procesa y analiza información en tiempo real para optimizar decisiones y mejorar la eficiencia operativa.",
     },
 ];
 
@@ -62,14 +57,14 @@ export const Services = () => {
                                     : "bg-transparent border-white/5 hover:border-white/10"
                             )}
                         >
-                            <div className="p-5 flex items-start gap-4">
+                            <div className="p-6 flex items-start gap-5">
                                 <div className={cn(
-                                    "w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-300",
+                                    "text-lg font-mono font-bold tracking-tighter transition-colors duration-300",
                                     activeIndex === idx
-                                        ? "bg-brand-blue-primary text-white"
-                                        : "bg-brand-gray-800 text-brand-gray-400 group-hover:text-white"
+                                        ? "text-brand-blue-primary"
+                                        : "text-brand-gray-600 group-hover:text-brand-gray-400"
                                 )}>
-                                    {service.icon}
+                                    {service.number}
                                 </div>
 
                                 <div className="flex-1">
@@ -97,14 +92,6 @@ export const Services = () => {
                                                 <p className="text-brand-gray-400 text-sm mt-3 leading-relaxed">
                                                     {service.description}
                                                 </p>
-                                                <ul className="mt-4 space-y-2">
-                                                    {service.features.map((feature, fIdx) => (
-                                                        <li key={fIdx} className="flex items-center gap-2 text-xs text-brand-gray-400">
-                                                            <div className="w-1 h-1 bg-brand-blue-primary rounded-full shadow-[0_0_5px_rgba(59,130,246,0.5)]" />
-                                                            {feature}
-                                                        </li>
-                                                    ))}
-                                                </ul>
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
@@ -114,24 +101,16 @@ export const Services = () => {
                     ))}
                 </div>
 
-                {/* Columna Derecha: Panel Demo (58-62%) */}
+                {/* Columna Derecha: Placeholder Estático */}
                 <div className="w-full lg:w-[60%] sticky top-24">
-                    <div className="relative aspect-16/10 w-full rounded-2xl overflow-hidden glass-card border border-white/5 shadow-2xl">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeIndex}
-                                initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
-                                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                                exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
-                                transition={{ duration: 0.5, ease: "easeInOut" }}
-                                className="absolute inset-0"
-                            >
-                                {(() => {
-                                    const ActiveDemo = services[activeIndex].Demo;
-                                    return <ActiveDemo />;
-                                })()}
-                            </motion.div>
-                        </AnimatePresence>
+                    <div className="relative aspect-16/10 w-full rounded-2xl overflow-hidden glass-card border border-white/5 shadow-2xl bg-[#0B0D12]">
+                        {services[activeIndex].id === "workflows" ? (
+                            <WorkflowPreview />
+                        ) : services[activeIndex].id === "integracion" ? (
+                            <IntegrationsPreview />
+                        ) : (
+                            <KPIDashboard />
+                        )}
                     </div>
 
                     {/* Subtle micro-glow behind the panel */}

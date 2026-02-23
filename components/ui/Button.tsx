@@ -32,29 +32,30 @@ export const Button = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
         ref
     ) => {
         const baseStyles =
-            "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:pointer-events-none";
+            "inline-flex items-center justify-center rounded-[var(--radius-button)] font-mono font-medium tracking-wide transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-brand-primary/50 disabled:opacity-50 disabled:pointer-events-none";
 
         const variants = {
             primary:
-                "bg-brand-blue-primary text-white hover:bg-brand-blue-accent shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] border border-transparent",
+                "bg-brand-primary text-white shadow-lg shadow-brand-primary/25 border border-transparent hover:brightness-110 active:translate-y-0",
             secondary:
-                "bg-white text-brand-black hover:bg-gray-100 border border-transparent",
-            outline:
+                "bg-transparent border border-white/20 text-white hover:bg-white/5 active:bg-white/10",
+            outline: // Keeping outline as fallback, styling similar to secondary
                 "bg-transparent border border-brand-gray-700 text-brand-gray-400 hover:text-white hover:border-brand-gray-400 hover:bg-brand-gray-800/50",
-            ghost: "text-brand-gray-400 hover:text-white hover:bg-brand-gray-800/50",
+            ghost:
+                "bg-[#0F172A] border border-white/10 text-white hover:bg-[#1E293B] hover:border-white/20",
         };
 
         const sizes = {
-            sm: "h-9 px-4 text-xs",
-            md: "h-11 px-6 text-sm",
-            lg: "h-14 px-8 text-base",
+            sm: "h-8 px-3 text-xs",
+            md: "h-10 px-5 text-sm",
+            lg: "h-12 px-7 text-base",
         };
 
         return (
             <motion.button
                 ref={ref}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -1 }}
+                whileTap={{ y: 0, scale: 0.98 }}
                 className={cn(baseStyles, variants[variant], sizes[size], className)}
                 disabled={isLoading || props.disabled}
                 {...props}

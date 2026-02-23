@@ -42,7 +42,7 @@ export const Benefits = () => {
         <SectionWrapper id="benefits" className="bg-brand-black/50">
             <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tighter mb-4">
-                    Por qué elegir RespondAi
+                    Por qué elegir MontserratAI
                 </h2>
             </div>
 

@@ -1,0 +1,91 @@
+{
+    "branding": {
+        "colorScheme": "dark",
+        "fonts": [
+            {
+                "family": "Inter",
+                "role": "body"
+            }
+        ],
+        "colors": {
+            "primary": "#0080FF",
+            "accent": "#0080FF",
+            "background": "#0A0A0A",
+            "textPrimary": "#0A0A0A",
+            "link": "#0080FF"
+        },
+        "typography": {
+            "fontFamilies": {
+                "primary": "Inter",
+                "heading": "Inter"
+            },
+            "fontStacks": {
+                "heading": [
+                    "Inter",
+                    "ui-sans-serif",
+                    "system-ui",
+                    "sans-serif",
+                    "Apple Color Emoji",
+                    "Segoe UI Emoji",
+                    "Segoe UI Symbol",
+                    "Noto Color Emoji"
+                ],
+                "body": [
+                    "Inter",
+                    "ui-sans-serif",
+                    "system-ui",
+                    "sans-serif",
+                    "Apple Color Emoji",
+                    "Segoe UI Emoji",
+                    "Segoe UI Symbol",
+                    "Noto Color Emoji"
+                ],
+                "paragraph": [
+                    "Inter",
+                    "ui-sans-serif",
+                    "system-ui",
+                    "sans-serif",
+                    "Apple Color Emoji",
+                    "Segoe UI Emoji",
+                    "Segoe UI Symbol",
+                    "Noto Color Emoji"
+                ]
+            },
+            "fontSizes": {
+                "h1": "60px",
+                "h2": "48px",
+                "body": "24px"
+            }
+        },
+        "spacing": {
+            "baseUnit": 4,
+            "borderRadius": "6px"
+        },
+        "components": {
+            "buttonPrimary": {
+                "background": "#0080FF",
+                "textColor": "#0A0A0A",
+                "borderRadius": "9999px",
+                "borderRadiusCorners": {
+                    "topLeft": "9999px",
+                    "topRight": "9999px",
+                    "bottomRight": "9999px",
+                    "bottomLeft": "9999px"
+                },
+                "shadow": "none"
+            },
+            "buttonSecondary": {
+                "background": "#FFFFFF",
+                "textColor": "#0080FF",
+                "borderRadius": "9999px",
+                "borderRadiusCorners": {
+                    "topLeft": "9999px",
+                    "topRight": "9999px",
+                    "bottomRight": "9999px",
+                    "bottomLeft": "9999px"
+                },
+                "shadow": "none"
+            }
+        }
+    }
+}
