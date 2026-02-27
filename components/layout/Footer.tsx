@@ -14,10 +14,11 @@ export const Footer = () => {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-8 text-sm text-brand-gray-400">
-                        <Link href="#services" className="hover:text-white transition-colors">Servicios</Link>
-                        <Link href="#benefits" className="hover:text-white transition-colors">Beneficios</Link>
-                        <Link href="#cta" className="hover:text-white transition-colors">Contacto</Link>
+                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-brand-gray-400">
+                        <Link href="/#services" className="hover:text-white transition-colors">Servicios</Link>
+                        <Link href="/#benefits" className="hover:text-white transition-colors">Beneficios</Link>
+                        <Link href="/#cta" className="hover:text-white transition-colors">Contacto</Link>
+                        <Link href="/privacidad" className="hover:text-white transition-colors">Política de Privacidad</Link>
                     </div>
 
                     <div className="flex flex-col items-center md:items-end gap-1 text-xs text-brand-gray-400 text-center md:text-right">
