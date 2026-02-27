@@ -33,7 +33,7 @@ export default function PrivacidadInfo() {
                                 <li><strong className="text-white">Nombre Comercial:</strong> MONTSERRATAI</li>
                                 <li><strong className="text-white">Propietario:</strong> Cardozo Rivera Juan Pablo</li>
                                 <li><strong className="text-white">NIT:</strong> 1.011.083.308-1</li>
-                                <li><strong className="text-white">Domicilio:</strong> Calle 39 Sur 72 Q 22 Apartamento 201 Torre 3, Bogotá D.C.</li>
+                                <li><strong className="text-white">Domicilio:</strong> Calle 39 Sur 72 Q 22</li>
                                 <li><strong className="text-white">Correo Electrónico:</strong> jcardozor06@gmail.com</li>
                                 <li><strong className="text-white">Teléfono:</strong> 3043906303</li>
                             </ul>
